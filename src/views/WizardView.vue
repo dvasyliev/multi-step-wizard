@@ -18,7 +18,7 @@
       <RadioGroupComponent v-model="customerData.package" :options="packages" />
     </FieldsetComponent>
 
-    <h2>Your premium is: {{ premium }}</h2>
+    <h2>Your premium is: {{ error || premium }}</h2>
 
     <div>
       <ButtonComponent @click="onBack">Back</ButtonComponent>
@@ -36,6 +36,9 @@ import InputComponent from '@/components/InputComponent.vue'
 import SelectComponent from '@/components/SelectComponent.vue'
 import RadioGroupComponent from '@/components/RadioGroupComponent.vue'
 import ButtonComponent from '@/components/ButtonComponent.vue'
+
+const BASE_PREMIUM_RATE = 10
+const AGE_LIMIT = 100
 
 export default {
   name: 'WizardView',
@@ -62,8 +65,38 @@ export default {
   computed: {
     ...mapState(['customer']),
 
+    selectedCountry() {
+      return this.countries.filter(({ value }) => value === this.customerData.country)?.[0]
+    },
+
+    selectedPackage() {
+      return this.packages.filter(({ value }) => value === this.customerData.package)?.[0]
+    },
+
+    error() {
+      if (parseInt(this.customerData.age, 10) > AGE_LIMIT) {
+        return 'Your age is over our accepted limit!'
+      }
+
+      if (!this.customerData.age || !this.selectedCountry || !this.selectedPackage) {
+        return 'Canot calculate, fill all data!'
+      }
+
+      return null
+    },
+
     premium() {
-      return 122
+      if (this.error) {
+        return NaN
+      }
+
+      const value =
+        BASE_PREMIUM_RATE *
+        parseInt(this.customerData.age, 10) *
+        this?.selectedCountry?.rate *
+        this?.selectedPackage?.multiplier
+
+      return `${value}${this.selectedCountry?.currency}`
     },
   },
 
