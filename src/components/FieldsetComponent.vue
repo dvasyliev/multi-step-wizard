@@ -22,3 +22,16 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.Fieldset {
+  width: 260px;
+  padding: 12px;
+}
+
+.Fieldset-label {
+  margin-bottom: 6px;
+  font-size: 14px;
+  text-align: left;
+}
+</style>

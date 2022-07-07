@@ -12,7 +12,7 @@
 
     <template v-else>No customer data</template>
 
-    <div>
+    <div style="display: flex; justify-content: center">
       <ButtonComponent @click="onBack">Back</ButtonComponent>
 
       <template v-if="customer">

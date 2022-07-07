@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="WizardView">
     <h1>Tell us about yourself</h1>
 
     <FieldsetComponent label="Name">
@@ -7,7 +7,7 @@
     </FieldsetComponent>
 
     <FieldsetComponent label="Age">
-      <InputComponent v-model="customerData.age" />
+      <InputComponent v-model="customerData.age" type="number" />
     </FieldsetComponent>
 
     <FieldsetComponent label="Where do you leave">
@@ -20,7 +20,7 @@
 
     <h2>Your premium is: {{ premium }}</h2>
 
-    <div>
+    <div style="display: flex; justify-content: center">
       <ButtonComponent @click="onBack">Back</ButtonComponent>
       <ButtonComponent @click="onNext">Next</ButtonComponent>
     </div>
@@ -112,11 +112,11 @@ export default {
       const { age } = this.customerData
       const { rate } = this.selectedCountry || {}
 
-      if (!age || !rate) {
+      if (!age || age > AGE_LIMIT || !rate) {
         return NaN
       }
 
-      return BASE_PREMIUM_RATE * parseInt(age, 10) * rate * multiplier
+      return BASE_PREMIUM_RATE * age * rate * multiplier
     },
 
     getPackageLabel(pkg, cost) {
@@ -136,13 +136,25 @@ export default {
     },
 
     onNext() {
-      this.setCustomer({
-        ...this.customerData,
-        premium: this.premium,
-      })
+      if (this.customerData.age > AGE_LIMIT) {
+        this.$router.push({ name: 'age-error' })
+      } else {
+        this.setCustomer({
+          ...this.customerData,
+          premium: this.premium,
+        })
 
-      this.$router.push({ name: 'summary' })
+        this.$router.push({ name: 'summary' })
+      }
     },
   },
 }
 </script>
+
+<style scoped>
+.WizardView {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>

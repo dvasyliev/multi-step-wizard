@@ -48,3 +48,19 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.RadioGroup {
+  text-align: left;
+}
+
+.RadioGroup label {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.RadioGroup input {
+  height: 20px;
+}
+</style>
