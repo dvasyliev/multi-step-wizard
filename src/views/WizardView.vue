@@ -20,7 +20,7 @@
 
     <h2>Your premium is: {{ premium }}</h2>
 
-    <div class="Wizard-buttons">
+    <div>
       <ButtonComponent @click="onBack">Back</ButtonComponent>
       <ButtonComponent @click="onNext">Next</ButtonComponent>
     </div>
@@ -67,7 +67,6 @@ export default {
 
   methods: {
     onBack() {
-      console.log('back')
       this.$router.go(-1)
     },
 
