@@ -5,8 +5,8 @@
     <template v-if="customer">
       Name: {{ customer.name }}<br />
       Age: {{ customer.age }}<br />
-      Where do you live: {{ customer.country.label }}<br />
-      Package: {{ customer.package.label }}<br />
+      Where do you live: {{ country.label }}<br />
+      Package: {{ pkg.label }}<br />
       Premium: {{ customer.premium }}
     </template>
 
@@ -23,7 +23,10 @@
 </template>
 
 <script>
+import find from 'lodash/find'
 import { mapActions, mapState } from 'vuex'
+import { countries } from '@/data/countries'
+import { packages } from '@/data/packages'
 import ButtonComponent from '@/components/ButtonComponent.vue'
 
 export default {
@@ -35,6 +38,14 @@ export default {
 
   computed: {
     ...mapState(['customer']),
+
+    country() {
+      return find(countries, { value: this.customer.country })
+    },
+
+    pkg() {
+      return find(packages, { value: this.customer.package })
+    },
   },
 
   methods: {

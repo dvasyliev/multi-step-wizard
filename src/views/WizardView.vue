@@ -174,8 +174,6 @@ export default {
 
       this.setCustomer({
         ...this.customerData,
-        country: this.selectedCountry,
-        package: this.selectedPackage,
         premium: this.premium,
       })
 
