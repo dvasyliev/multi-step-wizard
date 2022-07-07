@@ -1,4 +1,4 @@
-import HomeView from '@/views/HomeView.vue'
+import WelcomeView from '@/views/WelcomeView.vue'
 
 import WizardView from '@/views/WizardView.vue'
 import AgeErrorView from '@/views/AgeErrorView.vue'
@@ -9,8 +9,8 @@ import NotFoundView from '@/views/NotFoundView.vue'
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView,
+    name: 'welcome',
+    component: WelcomeView,
   },
 
   {
