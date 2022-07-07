@@ -15,10 +15,10 @@
     </FieldsetComponent>
 
     <FieldsetComponent>
-      <RadioGroupComponent v-model="customerData.package" :options="packages" />
+      <RadioGroupComponent v-model="customerData.package" :options="packagesExtended" />
     </FieldsetComponent>
 
-    <h2>Your premium is: {{ error || premium }}</h2>
+    <h2>Your premium is: {{ premium }}</h2>
 
     <div>
       <ButtonComponent @click="onBack">Back</ButtonComponent>
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import find from 'lodash/find'
 import { mapActions, mapState } from 'vuex'
 import { countries } from '@/data/countries'
 import { packages } from '@/data/packages'
@@ -58,7 +59,7 @@ export default {
       name: null,
       age: null,
       country: null,
-      package: null,
+      pkgage: null,
     },
   }),
 
@@ -66,37 +67,32 @@ export default {
     ...mapState(['customer']),
 
     selectedCountry() {
-      return this.countries.filter(({ value }) => value === this.customerData.country)?.[0]
+      return find(this.countries, { value: this.customerData.country })
+    },
+
+    standartPackageCost() {
+      const standartPackage = find(this.packages, { value: 'standart' })
+
+      return this.getPackageCost(standartPackage?.multiplier)
+    },
+
+    packagesExtended() {
+      return this.packages.map((pkg) => {
+        const cost = this.getPackageCost(pkg.multiplier)
+
+        return { ...pkg, cost, label: this.getPackageLabel(pkg, cost) }
+      })
     },
 
     selectedPackage() {
-      return this.packages.filter(({ value }) => value === this.customerData.package)?.[0]
-    },
-
-    error() {
-      if (parseInt(this.customerData.age, 10) > AGE_LIMIT) {
-        return 'Your age is over our accepted limit!'
-      }
-
-      if (!this.customerData.age || !this.selectedCountry || !this.selectedPackage) {
-        return 'Canot calculate, fill all data!'
-      }
-
-      return null
+      return find(this.packagesExtended, { value: this.customerData.package })
     },
 
     premium() {
-      if (this.error) {
-        return NaN
-      }
+      const { cost } = this.selectedPackage || {}
+      const { currency } = this.selectedCountry || {}
 
-      const value =
-        BASE_PREMIUM_RATE *
-        parseInt(this.customerData.age, 10) *
-        this?.selectedCountry?.rate *
-        this?.selectedPackage?.multiplier
-
-      return `${value}${this.selectedCountry?.currency}`
+      return cost && currency ? `${cost} ${currency}` : 'Canot be calculated'
     },
   },
 
@@ -111,6 +107,29 @@ export default {
 
   methods: {
     ...mapActions(['setCustomer']),
+
+    getPackageCost(multiplier) {
+      const { age } = this.customerData
+      const { rate } = this.selectedCountry || {}
+
+      if (!age || !rate) {
+        return NaN
+      }
+
+      return BASE_PREMIUM_RATE * parseInt(age, 10) * rate * multiplier
+    },
+
+    getPackageLabel(pkg, cost) {
+      if (pkg.value === 'standart' || !cost) {
+        return pkg.label
+      }
+
+      const costDifferenceFromStandart = cost - this.standartPackageCost
+      const { currency } = this.selectedCountry || {}
+      const percent = (pkg.multiplier - 1) * 100
+
+      return `${pkg.label} (+${costDifferenceFromStandart}${currency}, ${percent}%)`
+    },
 
     onBack() {
       this.$router.go(-1)
