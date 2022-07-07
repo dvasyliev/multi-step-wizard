@@ -15,7 +15,11 @@
     </FieldsetComponent>
 
     <FieldsetComponent>
-      <RadioGroupComponent v-model="customerData.package" :options="packagesExtended" />
+      <RadioGroupComponent
+        v-model="customerData.package"
+        :options="packagesExtended"
+        key-label="labelWithInfo"
+      />
     </FieldsetComponent>
 
     <h2>Your premium is: {{ premium }}</h2>
@@ -80,7 +84,7 @@ export default {
       return this.packages.map((pkg) => {
         const cost = this.getPackageCost(pkg.multiplier)
 
-        return { ...pkg, cost, label: this.getPackageLabel(pkg, cost) }
+        return { ...pkg, cost, labelWithInfo: this.getPackageLabel(pkg, cost) }
       })
     },
 
@@ -141,6 +145,8 @@ export default {
       } else {
         this.setCustomer({
           ...this.customerData,
+          country: this.selectedCountry,
+          package: this.selectedPackage,
           premium: this.premium,
         })
 

@@ -5,8 +5,8 @@
     <template v-if="customer">
       Name: {{ customer.name }}<br />
       Age: {{ customer.age }}<br />
-      Where do you live: {{ customer.country }}<br />
-      Package: {{ customer.package }}<br />
+      Where do you live: {{ customer.country.label }}<br />
+      Package: {{ customer.package.label }}<br />
       Premium: {{ customer.premium }}
     </template>
 
