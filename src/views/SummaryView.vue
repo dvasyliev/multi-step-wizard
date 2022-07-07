@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import ButtonComponent from '@/components/ButtonComponent.vue'
 
 export default {
@@ -38,12 +38,16 @@ export default {
   },
 
   methods: {
+    ...mapActions(['resetCustomer']),
+
     onBack() {
       this.$router.go(-1)
     },
 
     onBuy() {
-      alert('Success')
+      alert('Success!')
+      this.resetCustomer()
+      this.$router.push({ name: 'welcome' })
     },
   },
 }

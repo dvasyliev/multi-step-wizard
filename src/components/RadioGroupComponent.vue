@@ -2,8 +2,10 @@
   <div class="RadioGroup">
     <template v-for="option in options">
       <div :key="option[keyValue]">
-        <input :value="option[keyValue]" type="radio" :name="name" @input="onInput" />
-        {{ option[keyLabel] }}
+        <label>
+          <input :value="option[keyValue]" type="radio" :name="name" @input="onInput" />
+          {{ option[keyLabel] }}
+        </label>
       </div>
     </template>
   </div>

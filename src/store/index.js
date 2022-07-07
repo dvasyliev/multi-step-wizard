@@ -11,5 +11,9 @@ export default {
     setCustomer({ commit }, customer) {
       commit('SET_CUSTOMER', customer)
     },
+
+    resetCustomer({ commit }) {
+      commit('SET_CUSTOMER', null)
+    },
   },
 }

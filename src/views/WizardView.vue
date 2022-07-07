@@ -3,19 +3,19 @@
     <h1>Tell us about yourself</h1>
 
     <FieldsetComponent label="Name">
-      <InputComponent v-model="customer.name" />
+      <InputComponent v-model="customerData.name" />
     </FieldsetComponent>
 
     <FieldsetComponent label="Age">
-      <InputComponent v-model="customer.age" />
+      <InputComponent v-model="customerData.age" />
     </FieldsetComponent>
 
     <FieldsetComponent label="Where do you leave">
-      <SelectComponent v-model="customer.country" :options="countries" />
+      <SelectComponent v-model="customerData.country" :options="countries" />
     </FieldsetComponent>
 
     <FieldsetComponent>
-      <RadioGroupComponent v-model="customer.package" :options="packages" />
+      <RadioGroupComponent v-model="customerData.package" :options="packages" />
     </FieldsetComponent>
 
     <h2>Your premium is: {{ premium }}</h2>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import { countries } from '@/data/countries'
 import { packages } from '@/data/packages'
 import FieldsetComponent from '@/components/FieldsetComponent.vue'
@@ -51,7 +51,7 @@ export default {
   data: () => ({
     countries,
     packages,
-    customer: {
+    customerData: {
       name: null,
       age: null,
       country: null,
@@ -60,9 +60,20 @@ export default {
   }),
 
   computed: {
+    ...mapState(['customer']),
+
     premium() {
       return 122
     },
+  },
+
+  created() {
+    if (this.customer) {
+      this.customerData = {
+        ...this.customerData,
+        ...this.customer,
+      }
+    }
   },
 
   methods: {
@@ -74,7 +85,7 @@ export default {
 
     onNext() {
       this.setCustomer({
-        ...this.customer,
+        ...this.customerData,
         premium: this.premium,
       })
 
