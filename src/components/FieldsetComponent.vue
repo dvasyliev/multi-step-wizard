@@ -9,6 +9,12 @@
     <div class="Fieldset-element">
       <slot />
     </div>
+
+    <template v-if="error">
+      <div class="Fieldset-error">
+        {{ error }}
+      </div>
+    </template>
   </div>
 </template>
 
@@ -16,6 +22,11 @@
 export default {
   props: {
     label: {
+      type: String,
+      default: null,
+    },
+
+    error: {
       type: String,
       default: null,
     },
@@ -33,5 +44,11 @@ export default {
   margin-bottom: 6px;
   font-size: 14px;
   text-align: left;
+}
+
+.Fieldset-error {
+  margin-bottom: 6px;
+  text-align: left;
+  color: red;
 }
 </style>

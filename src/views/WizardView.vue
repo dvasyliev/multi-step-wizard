@@ -2,19 +2,19 @@
   <div class="WizardView">
     <h1>Tell us about yourself</h1>
 
-    <FieldsetComponent label="Name">
+    <FieldsetComponent label="Name" :error="errors.name">
       <InputComponent v-model="customerData.name" />
     </FieldsetComponent>
 
-    <FieldsetComponent label="Age">
+    <FieldsetComponent label="Age" :error="errors.age">
       <InputComponent v-model="customerData.age" type="number" />
     </FieldsetComponent>
 
-    <FieldsetComponent label="Where do you leave">
+    <FieldsetComponent label="Where do you leave" :error="errors.country">
       <SelectComponent v-model="customerData.country" :options="countries" />
     </FieldsetComponent>
 
-    <FieldsetComponent>
+    <FieldsetComponent :error="errors.package">
       <RadioGroupComponent
         v-model="customerData.package"
         :options="packagesExtended"
@@ -63,8 +63,9 @@ export default {
       name: null,
       age: null,
       country: null,
-      pkgage: null,
+      package: null,
     },
+    validated: false,
   }),
 
   computed: {
@@ -97,6 +98,27 @@ export default {
       const { currency } = this.selectedCountry || {}
 
       return cost && currency ? `${cost} ${currency}` : 'Canot be calculated'
+    },
+
+    errors() {
+      const nameRequiredError = !this.customerData.name ? 'Name required!' : false
+      const ageRequiredError = !this.customerData.age ? 'Age required!' : false
+      const ageLimitError = this.customerData.age > AGE_LIMIT ? 'Age can be maximum 100' : false
+      const countryError = !this.customerData.country ? 'Country required!' : false
+      const packageError = !this.customerData.package ? 'Package required!' : false
+
+      return this.validated
+        ? {
+            name: nameRequiredError,
+            age: ageRequiredError || ageLimitError,
+            country: countryError,
+            package: packageError,
+          }
+        : {}
+    },
+
+    hasError() {
+      return this.validated && Object.values(this.errors)?.filter((error) => error)?.length > 0
     },
   },
 
@@ -140,18 +162,24 @@ export default {
     },
 
     onNext() {
-      if (this.customerData.age > AGE_LIMIT) {
-        this.$router.push({ name: 'age-error' })
-      } else {
-        this.setCustomer({
-          ...this.customerData,
-          country: this.selectedCountry,
-          package: this.selectedPackage,
-          premium: this.premium,
-        })
+      this.validated = true
 
-        this.$router.push({ name: 'summary' })
+      if (this.hasError) {
+        return alert('Fill all data!')
       }
+
+      if (this.customerData.age > AGE_LIMIT) {
+        return this.$router.push({ name: 'age-error' })
+      }
+
+      this.setCustomer({
+        ...this.customerData,
+        country: this.selectedCountry,
+        package: this.selectedPackage,
+        premium: this.premium,
+      })
+
+      this.$router.push({ name: 'summary' })
     },
   },
 }
