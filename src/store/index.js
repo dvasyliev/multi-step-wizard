@@ -1,7 +1,15 @@
 export default {
-  state: {},
-  getters: {},
-  mutations: {},
-  actions: {},
-  modules: {},
+  state: {
+    customer: null,
+  },
+  mutations: {
+    SET_CUSTOMER(state, payload) {
+      state.customer = payload
+    },
+  },
+  actions: {
+    setCustomer({ commit }, customer) {
+      commit('SET_CUSTOMER', customer)
+    },
+  },
 }

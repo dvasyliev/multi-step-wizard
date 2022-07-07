@@ -4,22 +4,26 @@
 
     <template v-if="customer">
       Name: {{ customer.name }}<br />
-      Age: {{ cusotmer.age }}<br />
-      Where do you live: {{ cusotmer.country }}<br />
-      Package: {{ cusotmer.package }}<br />
-      Premium: {{ cusotmer.premium }}
+      Age: {{ customer.age }}<br />
+      Where do you live: {{ customer.country }}<br />
+      Package: {{ customer.package }}<br />
+      Premium: {{ customer.premium }}
     </template>
 
     <template v-else>No customer data</template>
 
     <div>
       <ButtonComponent @click="onBack">Back</ButtonComponent>
-      <ButtonComponent @click="onBuy">Buy</ButtonComponent>
+
+      <template v-if="customer">
+        <ButtonComponent @click="onBuy">Buy</ButtonComponent>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import ButtonComponent from '@/components/ButtonComponent.vue'
 
 export default {
@@ -29,9 +33,9 @@ export default {
     ButtonComponent,
   },
 
-  data: () => ({
-    customer: null,
-  }),
+  computed: {
+    ...mapState(['customer']),
+  },
 
   methods: {
     onBack() {

@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import { countries } from '@/data/countries'
 import { packages } from '@/data/packages'
 import FieldsetComponent from '@/components/FieldsetComponent.vue'
@@ -55,7 +56,6 @@ export default {
       age: null,
       country: null,
       package: null,
-      premium: null,
     },
   }),
 
@@ -66,11 +66,18 @@ export default {
   },
 
   methods: {
+    ...mapActions(['setCustomer']),
+
     onBack() {
       this.$router.go(-1)
     },
 
     onNext() {
+      this.setCustomer({
+        ...this.customer,
+        premium: this.premium,
+      })
+
       this.$router.push({ name: 'summary' })
     },
   },
