@@ -1,4 +1,4 @@
-# multi-step-form
+# multi-step-wizard
 
 ## Project setup
 ```
